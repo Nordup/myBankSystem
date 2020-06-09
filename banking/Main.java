@@ -3,10 +3,12 @@ package banking;
 import java.util.Scanner;
 
 public class Main {
+	Database			dbase;
 	AccountsDatabase	acntsDb;
 	Scanner				scan;
 
 	protected Main() {
+		dbase = new Database();
 		acntsDb = new AccountsDatabase();
 		scan = new Scanner(System.in);
 	}
@@ -44,7 +46,7 @@ public class Main {
 		database = main.arguments(args);
 		if (database == null) // if we doesn't have "-filename file"
 			System.exit(1);
-		if (main.acntsDb.sql.connect(database) == 1) // connect ot datatbase
+		if (main.dbase.connect(database) == 1) // connect ot datatbase
 			System.exit(1);
 		while (log == 1) {
 			log = main.startSystem();
@@ -52,6 +54,9 @@ public class Main {
 		if (log == 0) {
 			Output.printBye();
 		}
+		/**
+		 * some errors handling
+		 */
 	}
 
 	/**
@@ -71,7 +76,10 @@ public class Main {
 				case "0":
 					return 0; // exit the programm
 				case "1":
-					acntsDb.createAccount();
+					if (Account.createNew(dbase) != 0) { // add new account into database
+						Output.putstr("Cannot create new card...");
+						return 2; // error code
+					}
 					break;
 				case "2":
 					if (accountLogging() == 0)

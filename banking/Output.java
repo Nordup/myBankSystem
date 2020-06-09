@@ -30,11 +30,11 @@ class Output {
 	 * Put card created success string
 	 * @param acnt
 	 */
-	protected static void printCardCreated(Account acnt) {
+	protected static void printCardCreated(String cardNumber, String pin) {
 		System.out.println("\nYour card has been created");
 		System.out.println("Your card number:");
-		System.out.println(acnt.cardNumber);
+		System.out.println(cardNumber);
 		System.out.println("Your card PIN:");
-		System.out.println(acnt.pin + "\n");
+		System.out.println(pin + "\n");
 	}
 }

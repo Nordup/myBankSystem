@@ -2,7 +2,7 @@ package banking;
 
 import java.util.Random;
 
-class CardNumber {
+class BankCard {
 	
 	/**
 	 * Create card number with
@@ -10,7 +10,8 @@ class CardNumber {
 	 * and Luhn algorithm checksum
 	 * @return
 	 */
-	protected static String create(Random rand) {
+	protected static String createNumber() {
+		Random	rand = new Random();
 		String	IIN = "400000";
 		String	cardNumber = "";
 		int		CAN; // customer account number
@@ -25,6 +26,17 @@ class CardNumber {
 		// add checsum to cardNumber
 		cardNumber += LuhnAlgorithmChecksum(cardNumber); // return Luhn algoritgm checksum
 		return cardNumber;
+	}
+
+	protected static String createPin() {
+		Random	rand = new Random();
+		String	pin;
+
+		pin = String.valueOf(rand.nextInt(10000));
+		while (pin.length() < 4) {
+			pin = "0" + pin;
+		}
+		return pin;
 	}
 
 	/**

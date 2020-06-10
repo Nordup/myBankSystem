@@ -9,7 +9,7 @@ class BankCard {
 	private boolean			loggedin;
 
 	//Constructors:
-	private BankCard(String number) {
+	protected BankCard(String number) {
 		this.number = number;
 		this.loggedin = false;
 	}
@@ -40,8 +40,31 @@ class BankCard {
 	protected int getBalance() {
 		return balance;
 	}
+	protected boolean isLoggedIn() {
+		return loggedin;
+	}
 	//end of Getters
 
+	/**
+	 * Trying to log into bank card account
+	 * and pin, and return it.
+	 * If not finded return null
+	 * @param cardNumber
+	 * @param pin
+	 * @return Account or null
+	 */
+	protected int logIn(String pin) {
+		char checksum = number.charAt(number.length() - 1); // last digit
+		char LuhnChecksum = (char)(BankCard.LuhnAlgorithmChecksum(number) + '0');
+
+		if (checksum != LuhnChecksum) // if checksum wrong
+			return 1; // error
+//		for (Account acnt: acnts) {
+//			if (acnt.cardNumber.equals(number) && acnt.pin.equals(pin))
+//				return acnt;
+//		}
+		return 1; // can't log in
+	}
 
 	//Static methods:
 	/**
@@ -120,6 +143,8 @@ class BankCard {
 		int		sum = 0;
 		int		checksum;
 
+		if (cardNbr.length() < 15)
+			return -1; // error
 		for (int i = 0; i < 15; i++) {
 			dgt = cardNbr.charAt(i) - '0';
 			if (i % 2 == 0) // multiply odd digits by 2

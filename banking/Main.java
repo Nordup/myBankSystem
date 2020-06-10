@@ -4,12 +4,10 @@ import java.util.Scanner;
 
 public class Main {
 	Database			dbase;
-	AccountsDatabase	acntsDb;
 	Scanner				scan;
 
 	protected Main() {
 		dbase = new Database();
-		acntsDb = new AccountsDatabase();
 		scan = new Scanner(System.in);
 	}
 
@@ -76,13 +74,15 @@ public class Main {
 				case "0":
 					return 0; // exit the programm
 				case "1":
-					if (BankCard.createNew(dbase) != 0) { // add new account into database
+					 // add new account into database
+					if (BankCard.createNew(dbase) != 0) {
 						Output.putstr("Cannot create new card...\n");
 						return 2; // error code
 					}
 					break;
 				case "2":
-					if (accountLogging() == 0)
+					//log in
+					if (accountLogging() == 0) //can't log in
 						return 0; // exit
 					break;
 				default:
@@ -101,17 +101,18 @@ public class Main {
 	 * @return 0 to exit program
 	 */
 	private int accountLogging() {
+		//read input
 		Output.putstr("\nEnter your card number:\n");
 		String	cardNumber = scan.next();
 		Output.putstr("Enter your PIN:\n");
 		String	pin = scan.next();
 
-		if (cardNumber.length() != 15)
-			cardNumber = "000000000000000";
-		Account acnt = acntsDb.logIntoAccount(cardNumber, pin);
-		if (acnt != null) { // "null" mean that account is not finded
+		//logging in
+		BankCard card = new BankCard(cardNumber);
+		card.logIn(pin);
+		if (card.isLoggedIn()) {
 			Output.putstr("\nYou have successfully logged in!\n\n");
-			if (insideAccount(acnt) == 0)
+			if (insideAccount(card) == 0) //menu of account
 				return 0; // exit from program
 		}
 		else
@@ -126,7 +127,7 @@ public class Main {
 	 * @param acnt; account that we logged in
 	 * @return
 	 */
-	private int insideAccount(Account acnt) {
+	private int insideAccount(BankCard card) {
 		int log = 1;
 
 		while (log == 1) {
@@ -138,7 +139,7 @@ public class Main {
 
 				switch (cmd) {
 					case "1":
-						Output.putstr("\nBalance: " + acnt.getBalance() + "\n\n");
+						Output.putstr("\nBalance: " + card.getBalance() + "\n\n");
 						break;
 					case "2":
 						Output.putstr("\nYou have successfully logged Output!\n\n");

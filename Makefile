@@ -1,7 +1,6 @@
 PACKAGE = banking/
 OUT = ./out/
-FILES = Main.java Account.java AccountsDatabase.java \
-		Output.java BankCard.java Database.java
+FILES = Main.java Output.java BankCard.java Database.java
 CLASSES = $(FILES:%.java=%.class)
 PATH_FILES = $(addprefix $(PACKAGE), $(FILES))
 OUT_FILES = $(addprefix $(addprefix $(OUT), $(PACKAGE)), $(CLASSES))

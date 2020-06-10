@@ -33,6 +33,13 @@ class Database { // SQLite JDBC
 		return 0;
 	}
 
+	/**
+	 * read balance from database
+	 * and return it
+	 * @param number
+	 * @param pin
+	 * @return
+	 */
 	protected int[] balance(String number, String pin) {
 		int[] res = new int[]{1, 0};
 		try {

@@ -34,17 +34,22 @@ class BankCard {
 	protected String getNumber() {
 		return number;
 	}
-	protected String getPin() {
+	private String getPin() {
 		return pin;
 	}
-	protected int getBalance() {
-		return balance;
+	protected int[] getBalance(Database dbase) {
+		int[] res = new int[]{1, 0}; //[0] - execution code, [1] - result;
+		if (loggedin) {
+			res = dbase.balance(number, pin);
+		}
+		return res;
 	}
 	protected boolean isLoggedIn() {
 		return loggedin;
 	}
 	//end of Getters
 
+	//Account actions
 	/**
 	 * Trying to log into bank card account
 	 * and pin, and return it.
@@ -53,18 +58,21 @@ class BankCard {
 	 * @param pin
 	 * @return Account or null
 	 */
-	protected int logIn(String pin) {
+	protected int logIn(Database dbase,String pin) {
 		char checksum = number.charAt(number.length() - 1); // last digit
 		char LuhnChecksum = (char)(BankCard.LuhnAlgorithmChecksum(number) + '0');
 
 		if (checksum != LuhnChecksum) // if checksum wrong
 			return 1; // error
-//		for (Account acnt: acnts) {
-//			if (acnt.cardNumber.equals(number) && acnt.pin.equals(pin))
-//				return acnt;
-//		}
-		return 1; // can't log in
+		if (dbase.checkPin(dbase, number, pin) == 0) { // if correct
+			this.pin = pin;
+			loggedin = true;
+			return 0;
+		} else
+			return 1; // can't log in
 	}
+	//end of Account actions
+
 
 	//Static methods:
 	/**
@@ -81,10 +89,10 @@ class BankCard {
 		while (!created) { // while not created unique card number
 			cardNumber = BankCard.createNumber();
 
-			int log = dbase.checkNewCardNumber(cardNumber); // check new card if it's exists in database
+			int log = dbase.checkIfNumberExists(cardNumber); // check new card if it's exists in database
 			if (log == 2)
 				return 1; // error
-			else if (log == 1) // created new cardNumber
+			else if (log == 0) // created new cardNumber
 				created = true;
 		}
 		pin = BankCard.createPin(); // create **** pin

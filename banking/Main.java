@@ -50,6 +50,7 @@ public class Main {
 			log = main.startSystem();
 		}
 		if (log == 0) {
+			main.dbase.close();
 			Output.printBye();
 		}
 		/**
@@ -109,7 +110,7 @@ public class Main {
 
 		//logging in
 		BankCard card = new BankCard(cardNumber);
-		card.logIn(pin);
+		card.logIn(dbase, pin);
 		if (card.isLoggedIn()) {
 			Output.putstr("\nYou have successfully logged in!\n\n");
 			if (insideAccount(card) == 0) //menu of account
@@ -134,12 +135,17 @@ public class Main {
 			String cmd = "";
 
 			while (cmd.length() < 1) {
+				int[] balance;
 				Output.printAccountMenu();
 				cmd = scan.next();
 
 				switch (cmd) {
 					case "1":
-						Output.putstr("\nBalance: " + card.getBalance() + "\n\n");
+						balance = card.getBalance(dbase);
+						if (balance[0] == 0)
+							Output.putstr("\nBalance: " + balance[1] + "\n\n");
+						else
+							Output.putstr("Error\n");
 						break;
 					case "2":
 						Output.putstr("\nYou have successfully logged Output!\n\n");

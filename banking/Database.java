@@ -33,29 +33,74 @@ class Database { // SQLite JDBC
 		return 0;
 	}
 
+	protected int[] balance(String number, String pin) {
+		int[] res = new int[]{1, 0};
+		try {
+			String correct_pin;
+			String query = "SELECT * FROM card \n"
+						+  "WHERE number = " + number + "\n"			
+						+  ";";
+						
+			rs = stmnt.executeQuery(query); // select from database table
+			//reading from set
+			correct_pin = rs.getString("pin");
+			if (pin.equals(correct_pin)) { // if pin correct
+				res[0] = 0; // return code 0
+				res[1] = rs.getInt("balance");
+			}
+		} catch (SQLException e) {
+			Output.putstr(e.getMessage() + "\ncreateTableAccounts() fails\n");
+			res[0] = 1; // error code
+		}
+		return res;
+	}
+
 	/**
-	 * check new card number for existing in database
-	 * @param new_number
+	 * check if pin correct
+	 * @param dbase
+	 * @param number
+	 * @param pin
 	 * @return
 	 */
-	protected int checkNewCardNumber(String new_number) {
+	protected int checkPin(Database dbase, String number, String pin) {
 		try {
-			String tmp_nmbr; // temporary number
-
-			rs = stmnt.executeQuery("SELECT number FROM card;"); // select from database table
-			while (rs.next()) { // for every result
-				// read the result set
-				tmp_nmbr = rs.getString("number"); // get string from column number
-
-				if (new_number.equals(tmp_nmbr)) { // if this cardNumber exist
-					return 0; // finded
-				}
+			String correct_pin;
+			String query = "SELECT * FROM card \n"
+						+  "WHERE number = " + number + "\n"			
+						+  ";";
+						
+			rs = stmnt.executeQuery(query); // select from database table
+			//reading from set
+			correct_pin = rs.getString("pin");
+			if (pin.equals(correct_pin)) { // if pin correct
+				return 0; // pin correct
 			}
 		} catch (SQLException e) {
 			Output.putstr(e.getMessage() + "\ncreateTableAccounts() fails\n");
 			return 2; // error
 		}
-		return 1; // not finded
+		return 1; // not correct pin
+	}
+
+	/**
+	 * check new card number for existing in database
+	 * @param new_number
+	 * @return
+	 */
+	protected int checkIfNumberExists(String new_number) {
+		try {
+			String query = "SELECT number FROM card \n"
+						+  "WHERE number = " + new_number + "\n"			
+						+  ";";
+
+			rs = stmnt.executeQuery(query); // select from database table
+			if (rs.next() == true) // if this cardNumber exist
+				return 1; // finded
+		} catch (SQLException e) {
+			Output.putstr(e.getMessage() + "\ncreateTableAccounts() fails\n");
+			return 2; // error
+		}
+		return 0; // not finded
 	}
 
 	/**
@@ -81,6 +126,20 @@ class Database { // SQLite JDBC
 			return 0;
 		else
 			return 1;
+	}
+
+	protected int close() {
+		try {
+			if (con != null)
+				con.close();
+			if (stmnt != null)
+				stmnt.close();
+			if (rs != null)
+				rs.close();
+		} catch (SQLException e) {
+			Output.putstr(e.getMessage() + "\n");
+		}
+		return 0;
 	}
 
 	/**

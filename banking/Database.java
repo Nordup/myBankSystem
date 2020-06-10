@@ -135,6 +135,10 @@ class Database { // SQLite JDBC
 			return 1;
 	}
 
+	/**
+	 * close realised fields
+	 * @return
+	 */
 	protected int close() {
 		try {
 			if (con != null)

@@ -3,14 +3,81 @@ package banking;
 import java.util.Random;
 
 class BankCard {
-	
+	private final String	number;
+	private String			pin;
+	private int				balance;
+	private boolean			loggedin;
+
+	//Constructors:
+	private BankCard(String number) {
+		this.number = number;
+		this.loggedin = false;
+	}
+	//end of Constructors
+
+
+	//Setters: update in database table
+	private int setPin(String pin) { //rewrite
+		this.pin = pin;
+		return 0;
+	}
+	protected int addToBalance(int add) { //rewrite
+		this.balance += add;
+		return 0;
+	}
+	protected int subtractFromBalance(int subs) { //rewrite
+		this.balance -= subs;
+		return 0;
+	}
+	//end of Setters
+	//Getters:
+	protected String getNumber() {
+		return number;
+	}
+	protected String getPin() {
+		return pin;
+	}
+	protected int getBalance() {
+		return balance;
+	}
+	//end of Getters
+
+
+	//Static methods:
+	/**
+	 * Add new card into database with
+	 * new card number from CardNumber.create() and
+	 * with pin from createPin()
+	 * @return
+	 */
+	protected static int createNew(Database dbase) {
+		String	cardNumber = "";
+		String	pin;
+		boolean	created = false; // cardNumber created?
+
+		while (!created) { // while not created unique card number
+			cardNumber = BankCard.createNumber();
+
+			int log = dbase.checkNewCardNumber(cardNumber); // check new card if it's exists in database
+			if (log == 2)
+				return 1; // error
+			else if (log == 1) // created new cardNumber
+				created = true;
+		}
+		pin = BankCard.createPin(); // create **** pin
+		
+		if (dbase.insertInto(cardNumber, pin) != 0)
+			return 1; // error code
+		Output.printCardCreated(cardNumber, pin); // put "card created string"
+		return 0;
+	}
 	/**
 	 * Create card number with
 	 * IIN 400000, random customer account number
 	 * and Luhn algorithm checksum
 	 * @return
 	 */
-	protected static String createNumber() {
+	private static String createNumber() {
 		Random	rand = new Random();
 		String	IIN = "400000";
 		String	cardNumber = "";
@@ -27,8 +94,11 @@ class BankCard {
 		cardNumber += LuhnAlgorithmChecksum(cardNumber); // return Luhn algoritgm checksum
 		return cardNumber;
 	}
-
-	protected static String createPin() {
+	/**
+	 * create ranrom pin
+	 * @return
+	 */
+	private static String createPin() {
 		Random	rand = new Random();
 		String	pin;
 
@@ -45,7 +115,7 @@ class BankCard {
 	 * @param cardNbr
 	 * @return
 	 */
-	protected static int LuhnAlgorithmChecksum(String cardNbr) {
+	private static int LuhnAlgorithmChecksum(String cardNbr) {
 		int		dgt; // for digits of card
 		int		sum = 0;
 		int		checksum;
@@ -71,4 +141,5 @@ class BankCard {
 		}
 		return checksum;
 	}
+	//end of Static methods
 }

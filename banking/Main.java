@@ -76,8 +76,8 @@ public class Main {
 				case "0":
 					return 0; // exit the programm
 				case "1":
-					if (Account.createNew(dbase) != 0) { // add new account into database
-						Output.putstr("Cannot create new card...");
+					if (BankCard.createNew(dbase) != 0) { // add new account into database
+						Output.putstr("Cannot create new card...\n");
 						return 2; // error code
 					}
 					break;

@@ -38,7 +38,7 @@ class Database { // SQLite JDBC
 	 * @param new_number
 	 * @return
 	 */
-	protected int checkCardNumber(String new_number) {
+	protected int checkNewCardNumber(String new_number) {
 		try {
 			String tmp_nmbr; // temporary number
 

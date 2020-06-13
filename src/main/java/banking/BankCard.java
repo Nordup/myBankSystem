@@ -20,14 +20,6 @@ class BankCard {
 /*	private int setPin(String pin) { //rewrite
 		this.pin = pin;
 		return 0;
-	}
-	protected int addToBalance(int add) { //rewrite
-		this.balance += add;
-		return 0;
-	}
-	protected int subtractFromBalance(int subs) { //rewrite
-		this.balance -= subs;
-		return 0;
 	}*/
 	//end of Setters
 	//Getters:
@@ -72,6 +64,21 @@ class BankCard {
 		} else
 			return 1; // can't log in
 	}
+
+	protected int addIncome(Database dbase, String income) { //rewrite
+		if (dbase.update("balance", "balance + " + income) == 0)
+			return 0;
+		//this.balance += add;
+		return 1; // error
+	}
+	protected int doTransfer(Database dbase) { //rewrite
+		//this.balance -= subs;
+		return 0;
+	}
+	protected int deleteCard(Database dbase) {
+		return 0;
+	}
+
 	//end of Account actions
 
 

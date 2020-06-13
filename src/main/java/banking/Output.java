@@ -12,7 +12,10 @@ class Output {
 		System.out.println("\tUsage: gradle run --args=\"-filename [path to database]\"");
 	}
 	protected static void printAccountMenu() {
-		String menu = "1. Balance\n2. Log out\n0. Exit";
+		String menu = "1. Balance\n"
+					+ "2. Add income\n"
+					+ "5. Log out\n"
+					+ "0. Exit";
 		System.out.println(menu);
 	}
 	protected static void printMenu() {

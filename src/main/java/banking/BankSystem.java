@@ -148,6 +148,20 @@ public class BankSystem {
 							Output.putstr("Error\n");
 						break;
 					case "2":
+						Output.putstr("\nEnter income:\n");
+						String income = scan.next();
+						if (card.addIncome(dbase, income) == 0) //handle
+							Output.putstr("Income was added!\n\n");
+						else
+							Output.putstr("Error\n");
+						break;
+					case "3":
+						card.doTransfer(dbase); //handle
+						break;
+					case "4":
+						card.deleteCard(dbase); //handle
+						return 1;
+					case "5":
 						Output.putstr("\nYou have successfully logged Output!\n\n");
 						return 1;
 					case "0":

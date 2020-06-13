@@ -34,6 +34,26 @@ class Database { // SQLite JDBC
 	}
 
 	/**
+	 * update column with value
+	 * @param column
+	 * @param value
+	 * @return
+	 */
+	protected int update(String column, String value) {
+		try {
+			String createAcc = "UPDATE card SET\n"
+							+ column + " = " +  value + "\n"
+							+  ";";
+
+			stmnt.execute(createAcc);
+		} catch (SQLException e) {
+			Output.putstr(e.getMessage() + "\ncreateTableAccounts() fails\n");
+			return 1;
+		}
+		return 0;
+	}
+
+	/**
 	 * read balance from database
 	 * and return it
 	 * @param number

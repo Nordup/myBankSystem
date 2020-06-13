@@ -21,9 +21,8 @@ class Database { // SQLite JDBC
 	 */
 	protected int insertInto(String number, String pin) {
 		try {
-			String createAcc = "INSERT INTO card (number, pin)\n"
-							+  "	VALUES ('" + number + "', '" +  pin + "'\n"
-							+  ");";
+			String createAcc = String.format(	"INSERT INTO card (number, pin)\n"
+											+	"	VALUES ('%s', '%s');", number, pin);
 
 			stmnt.execute(createAcc);
 		} catch (SQLException e) {
@@ -42,10 +41,8 @@ class Database { // SQLite JDBC
 	 */
 	protected int update(String number, String column, String value) {
 		try {
-			String createAcc = "UPDATE card SET\n"
-							+ column + " = " +  value + "\n"
-							+ "WHERE number = " + number + "\n"
-							+  ";";
+			String createAcc = String.format(	"UPDATE card SET\n"
+											+	"	%s = %s WHERE number = %s;", column, value, number);
 
 			stmnt.execute(createAcc);
 		} catch (SQLException e) {
@@ -62,9 +59,8 @@ class Database { // SQLite JDBC
 	 */
 	protected int delete(String number) {
 		try {
-			String createAcc = "DELETE FROM card\n"
-							+ "WHERE number = " + number + "\n"
-							+  ";";
+			String createAcc = String.format(	"DELETE FROM card\n"
+											+	"WHERE number = %s;", number);
 
 			stmnt.execute(createAcc);
 		} catch (SQLException e) {
@@ -85,9 +81,8 @@ class Database { // SQLite JDBC
 		int[] res = new int[]{1, 0};
 		try {
 			String correct_pin;
-			String query = "SELECT * FROM card \n"
-						+  "WHERE number = " + number + "\n"
-						+  ";";
+			String query = String.format(	"SELECT * FROM card \n"
+										+	"WHERE number = %s;", number);
 						
 			rs = stmnt.executeQuery(query); // select from database table
 			//reading from set
@@ -113,9 +108,8 @@ class Database { // SQLite JDBC
 	protected int checkPin(Database dbase, String number, String pin) {
 		try {
 			String correct_pin;
-			String query = "SELECT * FROM card \n"
-						+  "WHERE number = " + number + "\n"
-						+  ";";
+			String query = String.format(	"SELECT * FROM card \n"
+										+	"WHERE number = %s;", number);
 						
 			rs = stmnt.executeQuery(query); // select from database table
 			//reading from set
@@ -137,9 +131,8 @@ class Database { // SQLite JDBC
 	 */
 	protected int checkIfNumberExists(String new_number) {
 		try {
-			String query = "SELECT number FROM card \n"
-						+  "WHERE number = " + new_number + "\n"			
-						+  ";";
+			String query = String.format(	"SELECT number FROM card \n"
+										+	"WHERE number = %s;", new_number);
 
 			rs = stmnt.executeQuery(query); // select from database table
 			if (rs.next() == true) // if this cardNumber exist

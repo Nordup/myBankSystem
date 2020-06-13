@@ -55,13 +55,13 @@ class BankCard {
 	}
 
 	protected int addIncome(Database dbase, String income) {
-		if (dbase.update(number, "balance", "balance + " + income) == 0)
+		if (dbase.update(number, "balance", String.format("balance + %s", income)) == 0)
 			return 0;
 		return 1; // error
 	}
 	protected int expenditure(Database dbase, String money) {
 		if (isLoggedIn()) {
-			if (dbase.update(number, "balance", "balance - " + money) == 0)
+			if (dbase.update(number, "balance", String.format("balance - %s", money)) == 0)
 				return 0;
 		}
 		return 1; // error

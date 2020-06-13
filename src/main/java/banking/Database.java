@@ -39,10 +39,30 @@ class Database { // SQLite JDBC
 	 * @param value
 	 * @return
 	 */
-	protected int update(String column, String value) {
+	protected int update(String number, String column, String value) {
 		try {
 			String createAcc = "UPDATE card SET\n"
 							+ column + " = " +  value + "\n"
+							+ "WHERE number = " + number + "\n"
+							+  ";";
+
+			stmnt.execute(createAcc);
+		} catch (SQLException e) {
+			Output.putstr(e.getMessage() + "\ncreateTableAccounts() fails\n");
+			return 1;
+		}
+		return 0;
+	}
+
+	/**
+	 * delete row
+	 * @param number
+	 * @return
+	 */
+	protected int delete(String number) {
+		try {
+			String createAcc = "DELETE FROM card\n"
+							+ "WHERE number = " + number + "\n"
 							+  ";";
 
 			stmnt.execute(createAcc);

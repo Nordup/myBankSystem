@@ -145,21 +145,27 @@ public class BankSystem {
 						if (balance[0] == 0)
 							Output.putstr("\nBalance: " + balance[1] + "\n\n");
 						else
-							Output.putstr("Error\n");
+							Output.putstr("Error\n\n");
 						break;
 					case "2":
 						Output.putstr("\nEnter income:\n");
 						String income = scan.next();
-						if (card.addIncome(dbase, income) == 0) //handle
+						if (card.addIncome(dbase, income) == 0)
 							Output.putstr("Income was added!\n\n");
 						else
-							Output.putstr("Error\n");
+							Output.putstr("Error\n\n");
 						break;
 					case "3":
-						card.doTransfer(dbase); //handle
+						if (transfer(card) == 0)
+							Output.putstr("Success!\n\n");
+						else
+							Output.putstr("Error!\n\n");
 						break;
 					case "4":
-						card.deleteCard(dbase); //handle
+						if (card.deleteCard(dbase) == 0)
+							Output.putstr("\nThe account has been closed!\n\n");
+						else
+							Output.putstr("Error\n\n");
 						return 1;
 					case "5":
 						Output.putstr("\nYou have successfully logged Output!\n\n");
@@ -171,6 +177,64 @@ public class BankSystem {
 						cmd = "";
 				}
 			}
+		}
+		return 0;
+	}
+
+	/**
+	 * 
+	 * @param card
+	 * @return
+	 */
+	private int transfer(BankCard card) {
+		//reading card number
+		String tr_number;
+		Output.putstr("\nTransfer\nEnter card number:\n");
+		tr_number = scan.next();
+		//check if checksum is right
+		char checksum = tr_number.charAt(tr_number.length() - 1); // last digit
+		char LuhnChecksum = (char)(BankCard.LuhnAlgorithmChecksum(tr_number) + '0');
+
+		if (checksum != LuhnChecksum) {// if checksum wrong
+			Output.putstr("Probably you made mistake in the card number. Please try again!\n\n");
+			return 1; // error
+		}
+		//check for card existing
+		if (dbase.checkIfNumberExists(tr_number) != 1) {
+			Output.putstr("Such a card does not exist.\n\n");
+			return 1; // error
+		}
+
+
+		//read transfer sum
+		Output.putstr("Enter how much money you want to transfer:\n");
+		String money = scan.next();
+
+		//check if we have enough money
+		int[] res = card.getBalance(dbase);
+		if (res[0] == 1)
+			return 1; // error! cannot get balance
+		int mon;
+		try {
+			mon = Integer.parseInt(money);
+		} catch (NumberFormatException e) {
+			return 1; // error! cannot parse money to int
+		}
+		if (res[1] < mon) {
+			Output.putstr("Not enough money!\n\n");
+			return 1; // error! don't have enough money
+		}
+
+		//transfer
+		BankCard tr_card = new BankCard(tr_number);
+		if (card.expenditure(dbase, money) != 0)
+			return 1; // error! can't take away money
+		if (tr_card.addIncome(dbase, money) != 0) {
+			if (card.addIncome(dbase, money) != 0) {// return back money
+				Output.putstr("Error, can't return money! Info: ...\n");
+				System.exit(3); // handle this situation
+			}
+			return 1; // error! cannot add income
 		}
 		return 0;
 	}

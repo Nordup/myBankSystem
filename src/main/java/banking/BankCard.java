@@ -66,17 +66,23 @@ class BankCard {
 	}
 
 	protected int addIncome(Database dbase, String income) { //rewrite
-		if (dbase.update("balance", "balance + " + income) == 0)
+		if (dbase.update(number, "balance", "balance + " + income) == 0)
 			return 0;
-		//this.balance += add;
 		return 1; // error
 	}
-	protected int doTransfer(Database dbase) { //rewrite
-		//this.balance -= subs;
-		return 0;
+	protected int expenditure(Database dbase, String money) {
+		if (isLoggedIn()) {
+			if (dbase.update(number, "balance", "balance - " + money) == 0)
+				return 0;
+		}
+		return 1; // error
 	}
 	protected int deleteCard(Database dbase) {
-		return 0;
+		if (isLoggedIn()) {
+			if (dbase.delete(number) == 0)
+				return 0;
+		}
+		return 1;
 	}
 
 	//end of Account actions
@@ -154,7 +160,7 @@ class BankCard {
 	 * @param cardNbr
 	 * @return
 	 */
-	private static int LuhnAlgorithmChecksum(String cardNbr) {
+	protected static int LuhnAlgorithmChecksum(String cardNbr) {
 		int		dgt; // for digits of card
 		int		sum = 0;
 		int		checksum;

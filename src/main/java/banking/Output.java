@@ -14,6 +14,8 @@ class Output {
 	protected static void printAccountMenu() {
 		String menu = "1. Balance\n"
 					+ "2. Add income\n"
+					+ "3. Do transfer\n"
+					+ "4. Close account\n"
 					+ "5. Log out\n"
 					+ "0. Exit";
 		System.out.println(menu);

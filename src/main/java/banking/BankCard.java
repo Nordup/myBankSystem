@@ -5,7 +5,6 @@ import java.util.Random;
 class BankCard {
 	private final String	number;
 	private String			pin;
-//	private int				balance;
 	private boolean			loggedin;
 
 	//Constructors:
@@ -15,20 +14,10 @@ class BankCard {
 	}
 	//end of Constructors
 
-
-	//Setters: update in database table
-/*	private int setPin(String pin) { //rewrite
-		this.pin = pin;
-		return 0;
-	}*/
-	//end of Setters
 	//Getters:
 	protected String getNumber() {
 		return number;
 	}
-/*	private String getPin() {
-		return pin;
-	}*/
 	protected int[] getBalance(Database dbase) {
 		int[] res = new int[]{1, 0}; //[0] - execution code, [1] - result;
 		if (loggedin) {
@@ -65,7 +54,7 @@ class BankCard {
 			return 1; // can't log in
 	}
 
-	protected int addIncome(Database dbase, String income) { //rewrite
+	protected int addIncome(Database dbase, String income) {
 		if (dbase.update(number, "balance", "balance + " + income) == 0)
 			return 0;
 		return 1; // error

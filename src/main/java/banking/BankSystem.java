@@ -44,11 +44,14 @@ public class BankSystem {
 		database = bsystem.arguments(args);
 		if (database == null) // if we doesn't have "-filename file"
 			System.exit(1);
-		if (bsystem.dbase.connect(database) == 1) // connect ot datatbase
-			System.exit(1);
+		// connect ot datatbase
+		if (bsystem.dbase.connect(database) == 1)
+			System.exit(2);
+		// main loop
 		while (log == 1) {
 			log = bsystem.startSystem();
 		}
+		// close connection with database
 		if (log == 0) {
 			bsystem.dbase.close();
 			Output.printBye();
@@ -70,6 +73,7 @@ public class BankSystem {
 		while (cmd.length() < 1) {
 			Output.printMenu();
 			
+			//read answer
 			cmd = scan.next();
 			switch (cmd) {
 				case "0":
@@ -87,8 +91,9 @@ public class BankSystem {
 						return 0; // exit
 					break;
 				default:
+					// try enter number again
 					Output.wrongAnswer();
-					cmd = ""; // to try enter number again
+					cmd = "";
 			}
 		}
 
@@ -113,7 +118,8 @@ public class BankSystem {
 		card.logIn(dbase, pin);
 		if (card.isLoggedIn()) {
 			Output.putstr("\nYou have successfully logged in!\n\n");
-			if (insideAccount(card) == 0) //menu of account
+			//menu of account
+			if (insideAccount(card) == 0)
 				return 0; // exit from program
 		}
 		else
@@ -134,13 +140,15 @@ public class BankSystem {
 		while (log == 1) {
 			String cmd = "";
 
-			while (cmd.length() < 1) {
-				int[] balance;
+			while (cmd.length() < 1) { // while we don't have right answer
 				Output.printAccountMenu();
+				//read answer
 				cmd = scan.next();
 
 				switch (cmd) {
 					case "1":
+						int[] balance;
+						// get balance
 						balance = card.getBalance(dbase);
 						if (balance[0] == 0)
 							Output.putstr("\nBalance: " + balance[1] + "\n\n");
@@ -149,30 +157,36 @@ public class BankSystem {
 						break;
 					case "2":
 						Output.putstr("\nEnter income:\n");
+						//read value of money
 						String income = scan.next();
+						//add money to the card
 						if (card.addIncome(dbase, income) == 0)
 							Output.putstr("Income was added!\n\n");
 						else
 							Output.putstr("Error\n\n");
 						break;
 					case "3":
+						// transfer money from this card to another
 						if (transfer(card) == 0)
 							Output.putstr("Success!\n\n");
 						else
 							Output.putstr("Error!\n\n");
 						break;
 					case "4":
+						// delete card from database
 						if (card.deleteCard(dbase) == 0)
 							Output.putstr("\nThe account has been closed!\n\n");
 						else
 							Output.putstr("Error\n\n");
-						return 1;
+						return 1; // return to main menu
 					case "5":
 						Output.putstr("\nYou have successfully logged Output!\n\n");
-						return 1;
+						return 1; // log out code
 					case "0":
+						// exit from account
 						return 0;
 					default:
+						// try again, wrong answer
 						Output.wrongAnswer();
 						cmd = "";
 				}
@@ -182,7 +196,7 @@ public class BankSystem {
 	}
 
 	/**
-	 * 
+	 *  transfer money from this card to another
 	 * @param card
 	 * @return
 	 */

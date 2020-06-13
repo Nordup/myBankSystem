@@ -35,6 +35,7 @@ class Database { // SQLite JDBC
 
 	/**
 	 * update column with value
+	 * where number = 'number'
 	 * @param column
 	 * @param value
 	 * @return
@@ -55,7 +56,7 @@ class Database { // SQLite JDBC
 	}
 
 	/**
-	 * delete row
+	 * delete row with this number
 	 * @param number
 	 * @return
 	 */
@@ -74,7 +75,7 @@ class Database { // SQLite JDBC
 	}
 
 	/**
-	 * read balance from database
+	 * read balance of card from database
 	 * and return it
 	 * @param number
 	 * @param pin
@@ -103,7 +104,7 @@ class Database { // SQLite JDBC
 	}
 
 	/**
-	 * check if pin correct
+	 * check if pin correct for card
 	 * @param dbase
 	 * @param number
 	 * @param pin
